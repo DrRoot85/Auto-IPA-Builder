@@ -1,0 +1,123 @@
+#!/bin/bash
+
+set -e
+
+function usage {
+	cat << USAGE
+
+Auto IPA Builder Made By SarahH12099
+
+Usage: build 'option'
+
+USAGE
+	exit 1
+}
+
+[[ $# = 0 ]] && usage
+
+commands=(spotilife spotspos spotilifespos)
+[[ ! " ${commands[@]} " =~ " $1 " ]] && usage
+
+function spotilife {
+	echo "Building Spotify w.Spotilife"
+	cd ~/Desktop/Tweaks
+	mkdir -p Build
+	cd Build
+	echo "Extracting IPA"
+	unzip ../Spotify.ipa -d Spotify > /dev/null
+	cd "Spotify";
+	echo "Downloading Files"
+	curl -O "https://sarahh12099.github.io/tweaks/CydiaSubstrate.zip"
+	curl -O "https://sarahh12099.github.io/tweaks/libloader.zip"
+	curl -O "https://sarahh12099.github.io/tweaks/Spotilife.zip"
+	echo "Extracting Files"
+	unzip CydiaSubstrate.zip > /dev/null
+	unzip libloader.zip > /dev/null
+	unzip Spotilife.zip > /dev/null
+	rm -r -f CydiaSubstrate.zip libloader.zip Spotilife.zip
+	echo "Moving Files"
+	mkdir -p Payload/Spotify.app/Frameworks
+	mkdir -p Payload/Spotify.app/libloader
+	mv Sys.dylib Payload/Spotify.app
+	mv CydiaSubstrate.framework Payload/Spotify.app/Frameworks
+	mv Spotilife.dylib Payload/Spotify.app/libloader
+	echo "Injecting Tweak"
+	cd "Payload/Spotify.app";
+	install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/Sys.dylib "Spotify" > /dev/null
+	echo "Packaging IPA"
+	cd ../../
+	zip -r -X ../"Spotify w.Spotilife.ipa" * > /dev/null
+	cd ../; rm -r -f Spotify
+	echo "Done Spotify w.Spotilife"
+}
+
+function spotspos {
+	echo "Building Spotify w.Spos"
+	cd ~/Desktop/Tweaks
+	mkdir -p Build
+	cd Build
+	echo "Extracting IPA"
+	unzip ../Spotify.ipa -d Spotify > /dev/null
+	cd "Spotify";
+	echo "Downloading Files"
+	curl -O "https://sarahh12099.github.io/tweaks/CydiaSubstrate.zip"
+	curl -O "https://sarahh12099.github.io/tweaks/libloader.zip"
+	curl -O "https://sarahh12099.github.io/tweaks/Spos.zip"
+	echo "Extracting Files"
+	unzip CydiaSubstrate.zip > /dev/null
+	unzip libloader.zip > /dev/null
+	unzip Spos.zip > /dev/null
+	rm -r -f CydiaSubstrate.zip libloader.zip Spos.zip
+	echo "Moving Files"
+	mkdir -p Payload/Spotify.app/Frameworks
+	mkdir -p Payload/Spotify.app/libloader
+	mv Sys.dylib Payload/Spotify.app
+	mv CydiaSubstrate.framework Payload/Spotify.app/Frameworks
+	mv Sposify.dylib Payload/Spotify.app/libloader
+	echo "Injecting Tweak"
+	cd "Payload/Spotify.app";
+	install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/Sys.dylib "Spotify" > /dev/null
+	echo "Packaging IPA"
+	cd ../../
+	zip -r -X ../"Spotify w.Spos.ipa" * > /dev/null
+	cd ../; rm -r -f Spotify
+	echo "Done Spotify w.Spos"
+}
+
+function spotilifespos {
+	echo "Building Spotify w.Spos + Spotilife"
+	cd ~/Desktop/Tweaks
+	mkdir -p Build
+	cd Build
+	echo "Extracting IPA"
+	unzip ../Spotify.ipa -d Spotify > /dev/null
+	cd "Spotify";
+	echo "Downloading Files"
+	curl -O "https://sarahh12099.github.io/tweaks/CydiaSubstrate.zip"
+	curl -O "https://sarahh12099.github.io/tweaks/libloader.zip"
+	curl -O "https://sarahh12099.github.io/tweaks/Spos.zip"
+	curl -O "https://sarahh12099.github.io/tweaks/Spotilife.zip"
+	echo "Extracting Files"
+	unzip CydiaSubstrate.zip > /dev/null
+	unzip libloader.zip > /dev/null
+	unzip Spos.zip > /dev/null
+	unzip Spotilife.zip > /dev/null
+	rm -r -f CydiaSubstrate.zip libloader.zip Spos.zip Spotilife.zip
+	echo "Moving Files"
+	mkdir -p Payload/Spotify.app/Frameworks
+	mkdir -p Payload/Spotify.app/libloader
+	mv Sys.dylib Payload/Spotify.app
+	mv CydiaSubstrate.framework Payload/Spotify.app/Frameworks
+	mv Sposify.dylib Payload/Spotify.app/libloader
+	mv Spotilife.dylib Payload/Spotify.app/libloader
+	echo "Injecting Tweak"
+	cd "Payload/Spotify.app";
+	install_name_tool -change /usr/lib/libSystem.B.dylib @executable_path/Sys.dylib "Spotify" > /dev/null
+	echo "Packaging IPA"
+	cd ../../
+	zip -r -X ../"Spotify w.Spos + Spotilife.ipa" * > /dev/null
+	cd ../; rm -r -f Spotify
+	echo "Done Spotify w.Spos + Spotilife"
+}
+
+"$1" "${@:2}"
